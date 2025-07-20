@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-7">
+      <div class="card border-0 shadow-lg rounded-3 overflow-hidden">
+        <!-- Header -->
+        <div class="card-header bg-primary text-white text-center py-4">
+          <h2 class="mb-2">Sign In to Book Harbor</h2>
+          <p class="mb-0">Welcome back to your reading journey</p>
+        </div>
+        
+        <div class="card-body p-4 p-md-5">
+          <!-- Display Messages -->
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-{{ message.tags }} alert-dismissible fade show mb-4" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+          {% endif %}
+
+          <!-- Login Form -->
+          <form method="POST" action="{% url 'login' %}">
+            {% csrf_token %}
+
+            <div class="row">
+              <!-- Email Field -->
+              <div class="col-12 mb-4">
+                <label for="signInEmail" class="form-label fw-bold">Email</label>
+                <input type="email" class="form-control form-control-lg" name="username" id="signInEmail"
+                       placeholder="Enter your email" required>
+              </div>
+
+              <!-- Password Field -->
+              <div class="col-12 mb-4">
+                <label for="signInPassword" class="form-label fw-bold">Password</label>
+                <div class="input-group input-group-lg">
+                  <input type="password" class="form-control" name="password" id="signInPassword"
+                         placeholder="Enter your password" required>
+                  <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                    Show
+                  </button>
+                </div>
+              </div>
+
+              <!-- Remember Me Checkbox -->
+              <div class="col-12 mb-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="rememberMe" name="remember_me">
+                  <label class="form-check-label" for="rememberMe">
+                    Remember me
+                  </label>
+                  <a href="#" class="float-end">Forgot password?</a>
+                </div>
+              </div>
+
+              <!-- Login Button -->
+              <div class="col-12 mb-4">
+                <button type="submit" class="btn btn-primary btn-lg w-100 py-3">Sign In</button>
+              </div>
+            </div>
+            
+            
+          </form>
+        </div>
+        
+        <div class="card-footer text-center py-4 bg-light">
+          <div class="fs-6">
+            Don't have an account? <a href="{% url 'register' %}" class="text-decoration-none fw-bold">Register here</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add JavaScript for password toggle -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Toggle password visibility
+    document.getElementById('togglePassword').addEventListener('click', function() {
+      const passwordInput = document.getElementById('signInPassword');
+      
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        this.textContent = 'Hide';
+      } else {
+        passwordInput.type = 'password';
+        this.textContent = 'Show';
+      }
+    });
+  });
+</script>
+{% endblock content %}

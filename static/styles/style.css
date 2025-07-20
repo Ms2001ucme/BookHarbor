@@ -1,0 +1,86 @@
+/* static/css/styles.css */
+
+:root {
+    --primary-color: #0d47a1;
+    --secondary-color: #1976d2;
+    --light-blue-1: #e3f2fd;
+    --light-blue-2: #bbdefb;
+    --light-blue-3: #90caf9;
+    --text-dark: #333333;
+    --text-light: #ffffff;
+    --shadow-sm: 2px 2px 8px rgba(0, 0, 0, 0.1);
+    --shadow-md: 2px 2px 10px rgba(0, 0, 0, 0.2);
+    --border-radius: 10px;
+  }
+  
+  /* Base Styles */
+  body {
+      background: linear-gradient(135deg, var(--light-blue-1), var(--light-blue-2), var(--light-blue-3), var(--light-blue-1));
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+  }
+  
+  .main-container {
+      margin-top: 20px;
+      margin-bottom: 40px;
+  }
+  
+  /* Navbar Styling */
+  .navbar {
+      background: var(--primary-color) !important;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .navbar a {
+      color: var(--text-light) !important;
+  }
+  
+  .navbar-brand {
+      font-weight: bold;
+      font-size: 1.4rem;
+  }
+  
+  /* Section Headers */
+  .section-header {
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--primary-color);
+      margin-bottom: 20px;
+      text-align: center;
+  }
+  
+  /* Content Boxes */
+  .content-box {
+      background: white;
+      border-radius: var(--border-radius);
+      padding: 20px;
+      box-shadow: var(--shadow-md);
+      margin-bottom: 20px;
+  }
+  
+  /* Buttons */
+  .btn-primary {
+      background: var(--secondary-color);
+      border: none;
+      transition: background-color 0.3s, transform 0.2s;
+  }
+  
+  .btn-primary:hover {
+      background: var(--primary-color);
+      transform: translateY(-2px);
+  }
+  
+  .btn-primary:active {
+      transform: translateY(0);
+  }
+  
+  /* Responsive Adjustments */
+  @media (max-width: 768px) {
+      .section-header {
+          font-size: 1.5rem;
+      }
+      
+      .content-box {
+          padding: 15px;
+      }
+  }

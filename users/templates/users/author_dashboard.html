@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center">Welcome, {{ user.username }}!</h2>
+    <p class="text-center">This is your author dashboard where you can manage your books, rentals, and earnings.</p>
+
+    <div class="row mt-4">
+        <!-- Book Management -->
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Your Books</h5>
+                    <ul>
+                        {% for book in books %}
+                            <li>{{ book.title }} - {{ book.status }}</li>
+                        {% empty %}
+                            <p>You haven't published any books yet.</p>
+                        {% endfor %}
+                    </ul>
+                    <a href="{% url 'add_book' %}" class="btn btn-primary mt-2">Add New Book</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rental Statistics -->
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Rental Stats</h5>
+                    <p><strong>Books Rented:</strong> {{ books_rented }}</p>
+                    <p><strong>Total Earnings:</strong> ₹{{ earnings }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logout Button -->
+    <div class="text-center mt-4">
+        <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+    </div>
+</div>
+{% endblock content %}

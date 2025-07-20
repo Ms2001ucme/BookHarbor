@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="mb-4 text-center">📖 Latest Book Reviews</h2>
+
+    {% if reviews %}
+        <div class="list-group">
+            {% for review in reviews %}
+                <div class="list-group-item d-flex align-items-start">
+                    <!-- User Profile Picture (Placeholder) -->
+                    <div class="me-3">
+                        <img src="https://via.placeholder.com/50" alt="User Avatar" class="rounded-circle">
+                    </div>
+                    
+                    <div>
+                        <!-- User and Rating -->
+                        <h5 class="mb-1">
+                            <strong>{{ review.user.username }}</strong>
+                            <span class="badge bg-warning text-dark ms-2">
+                                ⭐ {{ review.rating }}/5
+                            </span>
+                        </h5>
+                        
+                        <!-- Review Content -->
+                        <p class="mb-1 text-muted fst-italic">
+                            "{{ review.content }}"
+                        </p>
+
+                        <!-- Book Details -->
+                        <small>
+                            📚 <strong>Book:</strong> 
+                            <a href="{% url 'book_detail' review.book.id %}" class="text-decoration-none">
+                                {{ review.book.title }}
+                            </a>
+                        </small>
+                        
+                        <br>
+                        
+                        <!-- Review Date -->
+                        <small class="text-muted">
+                            🕒 Posted on {{ review.created_at|date:"F j, Y" }}
+                        </small>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info text-center mt-4">
+            <p>No reviews available. Be the first to write one! ✍️</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

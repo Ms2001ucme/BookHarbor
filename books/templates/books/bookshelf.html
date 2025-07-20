@@ -1,0 +1,693 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Book Harbor - Your Bookshelf{% endblock %}
+
+{% block content %}
+<!-- CSS code from the first artifact goes here -->
+<style>
+    /* Enhanced Base Styles */
+body {
+    background: linear-gradient(135deg, #f5f9ff, #e8f4ff, #d9ecff, #f0f7ff);
+    font-family: 'Poppins', sans-serif;
+    color: #2c3e50;
+    line-height: 1.6;
+}
+
+/* Improved Header Section */
+.bookshelf-header {
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(32, 74, 135, 0.85)), 
+                url('{% static "images/hero.jpg" %}') no-repeat center center/cover;
+    text-align: center;
+    color: white;
+    padding: 120px 20px 100px;
+    border-radius: 0 0 40px 40px;
+    box-shadow: 0px 15px 35px rgba(0, 0, 0, 0.2);
+    position: relative;
+    margin-bottom: 50px;
+    overflow: hidden;
+}
+
+.bookshelf-header::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background: url('{% static "images/wave.svg" %}') repeat-x;
+    background-size: contain;
+    opacity: 0.7;
+}
+
+.bookshelf-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    letter-spacing: -1.5px;
+    background: linear-gradient(45deg, #ffffff, #e6f2ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.bookshelf-subtitle {
+    font-size: 1.5rem;
+    margin-bottom: 0;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    font-weight: 300;
+}
+
+/* Enhanced Category Container */
+.category-container {
+    background: white;
+    border-radius: 24px;
+    padding: 35px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.06);
+    margin-bottom: 50px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    transition: transform 0.3s ease;
+}
+
+.category-container:hover {
+    transform: translateY(-5px);
+}
+
+.category-container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 8px;
+    background: linear-gradient(90deg, #204a87, #729fcf, #a6c3e0);
+    border-radius: 4px 4px 0 0;
+}
+
+/* Improved Section Headers */
+.section-header {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #204a87;
+    margin: 40px 0 30px;
+    position: relative;
+    padding-bottom: 15px;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+}
+
+.section-header::after {
+    content: "";
+    flex: 1;
+    margin-left: 20px;
+    height: 3px;
+    background: linear-gradient(90deg, #204a87, #729fcf, rgba(114, 159, 207, 0.2));
+    border-radius: 2px;
+}
+
+/* Enhanced Book Cards */
+.featured-books {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 25px;
+    margin-bottom: 35px;
+}
+
+.book-card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.07);
+    transition: all 0.4s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: relative;
+}
+
+.book-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 35px rgba(0, 0, 0, 0.12);
+}
+
+.book-card-image {
+    height: 220px;
+    overflow: hidden;
+    position: relative;
+}
+
+.book-card::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, 
+                rgba(0,0,0,0) 70%, 
+                rgba(0,0,0,0.02) 85%, 
+                rgba(0,0,0,0.05) 100%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.book-card:hover::after {
+    opacity: 1;
+}
+
+.book-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+.book-card:hover .book-card-image img {
+    transform: scale(1.08);
+}
+
+.book-card-content {
+    padding: 25px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.book-card-title {
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: #2c3e50;
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
+.book-card-author {
+    color: #6c757d;
+    font-size: 1rem;
+    margin-bottom: 20px;
+    font-style: italic;
+}
+
+.book-card-actions {
+    margin-top: auto;
+    display: flex;
+    gap: 12px;
+}
+
+/* Enhanced Buttons */
+.btn {
+    padding: 12px 24px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+    display: inline-block;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    transition: width 0.3s ease;
+    z-index: -1;
+}
+
+.btn:hover::before {
+    width: 100%;
+}
+
+.btn-primary {
+    background: linear-gradient(to right, #204a87, #3465a4);
+    color: white;
+    box-shadow: 0 5px 15px rgba(32, 74, 135, 0.25);
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(32, 74, 135, 0.35);
+}
+
+.btn-danger {
+    background: linear-gradient(to right, #e74c3c, #c0392b);
+    color: white;
+    box-shadow: 0 5px 15px rgba(231, 76, 60, 0.2);
+}
+
+.btn-danger:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(231, 76, 60, 0.3);
+}
+
+/* Enhanced Book List */
+.book-list-item {
+    background: #f8f9fa;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+    border-left: 5px solid #204a87;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.03);
+}
+
+.book-list-item:hover {
+    transform: translateX(8px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+}
+
+.book-cover-small {
+    width: 70px;
+    height: 105px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-right: 25px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+}
+
+.book-list-item:hover .book-cover-small {
+    transform: scale(1.08) rotate(-2deg);
+}
+
+/* Enhanced "See More" Button */
+.see-more-container {
+    text-align: center;
+    margin: 35px 0 15px;
+}
+
+.see-more {
+    display: inline-block;
+    padding: 14px 35px;
+    background: transparent;
+    color: #204a87;
+    border: 2px solid #204a87;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.see-more::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 0;
+    background: #204a87;
+    transition: all 0.4s ease;
+    z-index: -1;
+}
+
+.see-more:hover {
+    color: white;
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(32, 74, 135, 0.2);
+}
+
+.see-more:hover::before {
+    height: 100%;
+}
+
+/* Enhanced Empty State */
+.empty-state {
+    text-align: center;
+    padding: 60px 30px;
+    background: linear-gradient(145deg, #f8f9fa, #ffffff);
+    border-radius: 24px;
+    margin: 40px 0;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.05);
+    border: 1px dashed rgba(32, 74, 135, 0.2);
+}
+
+.empty-state-icon {
+    font-size: 4rem;
+    color: #204a87;
+    margin-bottom: 25px;
+    opacity: 0.6;
+}
+
+.empty-state-text {
+    font-size: 1.4rem;
+    color: #6c757d;
+    margin-bottom: 30px;
+    font-weight: 300;
+}
+
+/* Add Status Badges */
+.book-status {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    padding: 6px 12px;
+    border-radius: 30px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    z-index: 2;
+}
+
+.status-reading {
+    background: rgba(52, 152, 219, 0.9);
+    color: white;
+}
+
+.status-completed {
+    background: rgba(46, 204, 113, 0.9);
+    color: white;
+}
+
+.status-wishlist {
+    background: rgba(243, 156, 18, 0.9);
+    color: white;
+}
+
+/* Category Pill Badges */
+.category-badge {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: rgba(32, 74, 135, 0.1);
+    color: #204a87;
+    margin-right: 8px;
+    margin-bottom: 15px;
+}
+
+/* Reading Progress Bar */
+.reading-progress-container {
+    margin-top: 15px;
+    margin-bottom: 20px;
+}
+
+.reading-progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #e9ecef;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.reading-progress-value {
+    height: 100%;
+    background: linear-gradient(to right, #204a87, #729fcf);
+    border-radius: 4px;
+}
+
+.reading-progress-text {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-top: 5px;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #729fcf;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #204a87;
+}
+
+/* Added Animation */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.category-container {
+    animation: fadeInUp 0.5s ease forwards;
+}
+
+/* Enhanced Responsiveness */
+@media (max-width: 992px) {
+    .bookshelf-title {
+        font-size: 2.6rem;
+    }
+    
+    .section-header {
+        font-size: 2rem;
+    }
+    
+    .featured-books {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .bookshelf-header {
+        padding: 90px 15px;
+    }
+    
+    .bookshelf-title {
+        font-size: 2.2rem;
+    }
+    
+    .bookshelf-subtitle {
+        font-size: 1.3rem;
+    }
+    
+    .featured-books {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    }
+    
+    .book-list-item {
+        flex-direction: column;
+        text-align: center;
+        padding: 25px;
+    }
+    
+    .book-cover-small {
+        margin-right: 0;
+        margin-bottom: 15px;
+        width: 90px;
+        height: 135px;
+    }
+    
+    .book-actions {
+        margin-top: 20px;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 576px) {
+    .bookshelf-title {
+        font-size: 2rem;
+    }
+    
+    .featured-books {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+
+<div class="bookshelf-header">
+    <h1 class="bookshelf-title">Your Personal Bookshelf</h1>
+    <p class="bookshelf-subtitle">Track your reading journey and discover your next adventure</p>
+</div>
+
+<div class="container">
+    {% if grouped_books %}
+        <div class="reading-stats mb-5">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h4 class="stat-number">{{ total_books }}</h4>
+                            <p class="stat-label">Total Books</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-bookmark"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h4 class="stat-number">{{ books_read }}</h4>
+                            <p class="stat-label">Books Completed</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-glasses"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h4 class="stat-number">{{ currently_reading }}</h4>
+                            <p class="stat-label">Currently Reading</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        {% for category, books in grouped_books.items %}
+            <div class="category-container">
+                <h2 class="section-header">
+                    {% if category == "reading" %}
+                        <i class="fas fa-book-reader me-3"></i>
+                    {% elif category == "completed" %}
+                        <i class="fas fa-check-circle me-3"></i>
+                    {% elif category == "wishlist" %}
+                        <i class="fas fa-star me-3"></i>
+                    {% else %}
+                        <i class="fas fa-layer-group me-3"></i>
+                    {% endif %}
+                    {{ category|title }}
+                </h2>
+                
+                <div class="featured-books">
+                    {% for book in books|slice:":3" %}
+                        <div class="book-card">
+                            {% if category == "reading" %}
+                                <span class="book-status status-reading">Reading</span>
+                            {% elif category == "completed" %}
+                                <span class="book-status status-completed">Completed</span>
+                            {% elif category == "wishlist" %}
+                                <span class="book-status status-wishlist">Wishlist</span>
+                            {% endif %}
+                            
+                            <div class="book-card-image">
+                                <img src="{{ book.get_cover_image_url }}" alt="{{ book.title }}">
+                            </div>
+                            <div class="book-card-content">
+                                <div class="category-badge">{{ book.genre|default:"Fiction" }}</div>
+                                <h3 class="book-card-title">{{ book.title }}</h3>
+                                <div class="book-card-author">by {{ book.author }}</div>
+                                
+                                {% if category == "reading" and book.progress %}
+                                <div class="reading-progress-container">
+                                    <div class="reading-progress-bar">
+                                        <div class="reading-progress-value" style="width: {{ book.progress }}%"></div>
+                                    </div>
+                                    <div class="reading-progress-text">
+                                        <span>{{ book.progress }}% complete</span>
+                                        <span>{{ book.current_page|default:"?" }}/{{ book.total_pages|default:"?" }}</span>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                
+                                <div class="book-card-actions">
+                                    {% if book.book_id %}
+                                        <a href="{% url 'book_detail' book.book_id %}" class="btn btn-primary">View</a>
+                                    {% elif book.google_book_id %}
+                                        <a href="https://books.google.com/books?id={{ book.google_book_id }}" target="_blank" class="btn btn-primary">View</a>
+                                    {% else %}
+                                        <span class="btn btn-secondary disabled">No Details</span>
+                                    {% endif %}
+
+                                    {% if book.id %}
+                                        <a href="{% url 'remove_from_bookshelf' book.id %}" class="btn btn-danger">Remove</a>
+                                    {% else %}
+                                        <span class="text-muted">Cannot Remove</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                
+                {% if books|length > 3 %}
+                    <ul class="book-list">
+                        {% for book in books|slice:"3:" %}
+                            <li class="book-list-item">
+                                <img src="{{ book.get_cover_image_url }}" alt="{{ book.title }}" class="book-cover-small">
+                                <div class="book-info">
+                                    <div class="category-badge">{{ book.genre|default:"Fiction" }}</div>
+                                    <div class="book-title">{{ book.title }}</div>
+                                    <div class="book-author">by {{ book.author }}</div>
+                                    
+                                    {% if category == "reading" and book.progress %}
+                                    <div class="reading-progress-container">
+                                        <div class="reading-progress-bar">
+                                            <div class="reading-progress-value" style="width: {{ book.progress }}%"></div>
+                                        </div>
+                                        <div class="reading-progress-text">
+                                            <span>{{ book.progress }}% complete</span>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="book-actions">
+                                    {% if book.id %}
+                                        <a href="{% url 'book_detail' book.id %}" class="btn btn-primary btn-sm">View</a>
+                                        <a href="{% url 'remove_from_bookshelf' book.id %}" class="btn btn-danger btn-sm">Remove</a>
+                                    {% else %}
+                                        <span class="text-muted">No Details Available</span>
+                                    {% endif %}
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                <div class="see-more-container">
+                    <a href="{% url 'category_books' category=category %}" class="see-more">
+                        <i class="fas fa-books me-2"></i>
+                        See All {{ category|title }} Books
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-state">
+            <div class="empty-state-icon">
+                <i class="fas fa-book-open"></i>
+            </div>
+            <h3 class="empty-state-text">Your bookshelf is empty</h3>
+            <p class="mb-4">Start by adding some books to your collection!</p>
+            <a href="{% url 'home' %}" class="btn btn-primary">Explore Books</a>
+        </div>
+    {% endif %}
+</div>
+
+{% endblock content %}

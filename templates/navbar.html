@@ -1,0 +1,204 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navbar</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Arial', sans-serif;">
+    <nav style="background-color: #2c3e50; box-shadow: 0 2px 10px rgba(0,0,0,0.2); position: sticky; top: 0; z-index: 1000;">
+        <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+            <!-- Logo -->
+            <a href="{% url 'home' %}" style="text-decoration: none; padding: 10px 0;">
+                <img src="{% static 'images/logo.png' %}" alt="SiteLogo" style="width: 80px; height: 60px; border-radius: 50%; object-fit: cover; transition: transform 0.3s ease;">
+            </a>
+
+            <!-- Mobile Menu Toggle -->
+            <div id="mobile-menu-toggle" style="display: none; cursor: pointer; font-size: 24px; color: white; padding: 10px;">
+                <i class="fas fa-bars"></i>
+            </div>
+
+            <!-- Navigation Links -->
+            <ul id="navbar-links" style="list-style: none; display: flex; margin: 0; padding: 0; flex-grow: 1; justify-content: center;">
+                <li style="position: relative; margin: 0 5px;">
+                    <a href="{% url 'home' %}" style="color: white; text-decoration: none; padding: 20px 15px; display: block; font-weight: 500; transition: all 0.3s ease;">
+                        <i class="fas fa-home" style="margin-right: 5px;"></i> Home
+                    </a>
+                </li>
+                {% comment %} <li style="position: relative; margin: 0 5px;">
+                    <a href="{% url 'role_redirect' %}" style="color: white; text-decoration: none; padding: 20px 15px; display: block; font-weight: 500; transition: all 0.3s ease;">
+                        <i class="fas fa-tachometer-alt" style="margin-right: 5px;"></i> Dashboard
+                    </a>
+                </li> {% endcomment %}
+                <li class="nav-dropdown" style="position: relative; margin: 0 5px;">
+                    <a href="{% url 'category_filter' %}"  style="color: white; text-decoration: none; padding: 20px 15px; display: block; font-weight: 500; transition: all 0.3s ease;">
+                        <i class="fas fa-book" style="margin-right: 5px;"></i> Browse 
+                    </a>
+                    <ul class="dropdown-menu" style="position: absolute; top: 100%; left: 0; background-color: white; min-width: 200px; box-shadow: 0 8px 16px rgba(0,0,0,0.2); padding: 10px 0; z-index: 1; display: none; border-radius: 4px; list-style: none;">
+                        {% for category in categories %}
+                            <li>
+                                <a href="{% url 'category_filter' %}?category={{ category }}" style="color: #333; text-decoration: none; padding: 10px 20px; display: block; font-weight: 400; transition: background 0.2s ease;">
+                                    {{ category }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                
+
+                <!-- Show Only If User is Logged In -->
+                {% if user.is_authenticated %}
+                    <li style="position: relative; margin: 0 5px;">
+                        <a href="{% url 'my_book_lists' %}" style="color: white; text-decoration: none; padding: 20px 15px; display: block; font-weight: 500; transition: all 0.3s ease;">
+                            <i class="fas fa-bookmark" style="margin-right: 5px;"></i> My Books
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+
+            <!-- Search Bar -->
+            <form action="{% url 'search_books' %}" method="GET" style="margin: 0 15px; display: flex; align-items: center;">
+                <input type="text" name="q" placeholder="Search books..." required style="padding: 8px 15px; border: none; border-radius: 20px 0 0 20px; outline: none; width: 200px; background-color: #f8f9fa;">
+                <button type="submit" style="padding: 8px 15px; border: none; border-radius: 0 20px 20px 0; background-color: #3498db; color: white; cursor: pointer; transition: background 0.3s ease;">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>            
+
+            <!-- User Section -->
+            <div style="display: flex; align-items: center;">
+                {% if user.is_authenticated %}
+                    <!-- Profile Dropdown -->
+                    <div id="profile-dropdown" class="nav-dropdown" style="position: relative;">
+                        <button id="profile-toggle" style="background-color: transparent; border: none; color: white; padding: 10px 15px; cursor: pointer; font-weight: 500; display: flex; align-items: center; font-size: 16px;">
+                            <i class="fas fa-user-circle" style="margin-right: 8px; font-size: 20px;"></i> Welcome, {{ user.username }}
+                            <i class="fas fa-chevron-down" style="margin-left: 5px; font-size: 12px;"></i>
+                        </button>
+                        <ul id="profile-menu" class="dropdown-menu" style="position: absolute; top: 100%; right: 0; background-color: white; min-width: 180px; box-shadow: 0 8px 16px rgba(0,0,0,0.2); padding: 10px 0; z-index: 1; display: none; border-radius: 4px; list-style: none;">
+                            <li><a href="{% url 'user_profile' %}" style="color: #333; text-decoration: none; padding: 10px 20px; display: block; transition: background 0.2s ease;"><i class="fas fa-user" style="margin-right: 8px;"></i> Profile</a></li>
+
+                            <li><a href="{% url 'logout' %}" style="color: #e74c3c; text-decoration: none; padding: 10px 20px; display: block; transition: background 0.2s ease; border-top: 1px solid #eee;"><i class="fas fa-sign-out-alt" style="margin-right: 8px;"></i> Logout</a></li>
+                        </ul>
+                    </div>
+                {% else %}
+                    <a href="{% url 'login' %}" style="background-color: transparent; border: 2px solid #3498db; color: white; padding: 8px 15px; border-radius: 20px; text-decoration: none; margin-right: 10px; transition: all 0.3s ease; font-weight: 500;">
+                        <i class="fas fa-sign-in-alt" style="margin-right: 5px;"></i> Sign In
+                    </a>
+                    <a href="{% url 'register' %}" style="background-color: #3498db; border: none; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none; transition: all 0.3s ease; font-weight: 500;">
+                        <i class="fas fa-user-plus" style="margin-right: 5px;"></i> Join
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Add the script at the end of the body -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Specifically fix the profile dropdown
+            const profileToggle = document.getElementById('profile-toggle');
+            const profileMenu = document.getElementById('profile-menu');
+            
+            if (profileToggle && profileMenu) {
+                profileToggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    profileMenu.style.display = profileMenu.style.display === 'block' ? 'none' : 'block';
+                });
+            }
+            
+            // Fix browse dropdown
+            const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+            
+            dropdownToggles.forEach(toggle => {
+                toggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const menu = this.nextElementSibling;
+                    menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+                });
+            });
+            
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', function(e) {
+                const dropdowns = document.querySelectorAll('.dropdown-menu');
+                dropdowns.forEach(dropdown => {
+                    if (!e.target.closest('.nav-dropdown')) {
+                        dropdown.style.display = 'none';
+                    }
+                });
+            });
+            
+            // Mobile menu toggle
+            const mobileToggle = document.getElementById('mobile-menu-toggle');
+            const navLinks = document.getElementById('navbar-links');
+            
+            if (mobileToggle && navLinks) {
+                mobileToggle.addEventListener('click', function() {
+                    if (navLinks.style.display === 'flex' || getComputedStyle(navLinks).display === 'flex') {
+                        navLinks.style.display = 'none';
+                    } else {
+                        navLinks.style.display = 'flex';
+                        navLinks.style.flexDirection = 'column';
+                        navLinks.style.width = '100%';
+                        navLinks.style.position = 'absolute';
+                        navLinks.style.top = '80px';
+                        navLinks.style.left = '0';
+                        navLinks.style.backgroundColor = '#2c3e50';
+                    }
+                });
+            }
+            
+            // Hover effects for navigation links
+            const navItems = document.querySelectorAll('#navbar-links li a');
+            
+            navItems.forEach(item => {
+                item.addEventListener('mouseover', function() {
+                    this.style.backgroundColor = '#34495e';
+                });
+                
+                item.addEventListener('mouseout', function() {
+                    this.style.backgroundColor = 'transparent';
+                });
+            });
+            
+            // Dropdown menu items hover effect
+            const dropdownItems = document.querySelectorAll('.dropdown-menu li a');
+            
+            dropdownItems.forEach(item => {
+                item.addEventListener('mouseover', function() {
+                    this.style.backgroundColor = '#f8f9fa';
+                });
+                
+                item.addEventListener('mouseout', function() {
+                    this.style.backgroundColor = 'transparent';
+                });
+            });
+            
+            // Add responsive styles
+            function checkWindowSize() {
+                if (window.innerWidth <= 768) {
+                    // Mobile styles
+                    document.getElementById('navbar-links').style.display = 'none';
+                    document.getElementById('mobile-menu-toggle').style.display = 'block';
+                    document.querySelector('form').style.width = '100%';
+                    document.querySelector('form').style.margin = '10px 0';
+                    document.querySelector('.navbar-container') && (document.querySelector('.navbar-container').style.flexDirection = 'column');
+                } else {
+                    // Desktop styles
+                    document.getElementById('navbar-links').style.display = 'flex';
+                    document.getElementById('mobile-menu-toggle').style.display = 'none';
+                    document.querySelector('form').style.width = 'auto';
+                    document.querySelector('form').style.margin = '0 15px';
+                    document.querySelector('.navbar-container') && (document.querySelector('.navbar-container').style.flexDirection = 'row');
+                }
+            }
+            
+            // Check on load and resize
+            checkWindowSize();
+            window.addEventListener('resize', checkWindowSize);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,389 @@
+{% extends 'base.html' %}
+
+{% block content %}    
+    <style>
+        /* Base styles */
+        body {
+            background: linear-gradient(135deg, #f5f9ff, #e8f4ff, #d9ecff, #f0f7ff);
+            font-family: 'Poppins', sans-serif;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+
+        /* Group books header */
+        .group-header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .group-header h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #204a87;
+            display: inline-flex;
+            align-items: center;
+            padding-bottom: 15px;
+            border-bottom: 3px solid;
+            border-image: linear-gradient(90deg, #204a87, #729fcf, rgba(114, 159, 207, 0.2)) 1;
+        }
+
+        .group-header h2 i {
+            margin-right: 12px;
+        }
+
+        .books-count {
+            display: inline-block;
+            background-color: #204a87;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 5px 12px;
+            border-radius: 50px;
+            margin-left: 12px;
+            vertical-align: middle;
+        }
+
+        /* Book grid */
+        .book-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        /* Enhanced book cards */
+        .book-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.07);
+            transition: all 0.4s ease;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            position: relative;
+        }
+
+        .book-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.12);
+        }
+
+        .book-thumbnail-wrapper {
+            height: 250px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .book-thumbnail {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .book-card:hover .book-thumbnail {
+            transform: scale(1.08);
+        }
+
+        .book-info {
+            padding: 25px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .book-title {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .book-author {
+            color: #6c757d;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .category-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: rgba(32, 74, 135, 0.1);
+            color: #204a87;
+            margin-right: 8px;
+            margin-bottom: 15px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 24px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            display: inline-block;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            transition: width 0.3s ease;
+            z-index: -1;
+        }
+
+        .btn:hover::before {
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, #204a87, #3465a4);
+            color: white;
+            box-shadow: 0 5px 15px rgba(32, 74, 135, 0.25);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(32, 74, 135, 0.35);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(to right, #6c757d, #495057);
+            color: white;
+            box-shadow: 0 5px 15px rgba(108, 117, 125, 0.25);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(108, 117, 125, 0.35);
+        }
+
+        .btn-outline-primary {
+            background: transparent;
+            color: #204a87;
+            border: 2px solid #204a87;
+        }
+
+        .btn-outline-primary:hover {
+            background: #204a87;
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 0.85rem;
+        }
+
+        .actions-container {
+            margin-top: auto; 
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 60px 30px;
+            background: linear-gradient(145deg, #f8f9fa, #ffffff);
+            border-radius: 24px;
+            margin: 40px 0;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.05);
+            border: 1px dashed rgba(32, 74, 135, 0.2);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            color: #204a87;
+            margin-bottom: 25px;
+            opacity: 0.6;
+        }
+
+        .empty-state-text {
+            font-size: 1.4rem;
+            color: #6c757d;
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+
+        /* Back button */
+        .back-container {
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .navigation-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .navigation-btn:hover {
+            transform: translateX(-5px);
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .book-card {
+            animation: fadeIn 0.5s ease forwards;
+            animation-delay: calc(var(--i) * 0.1s);
+            opacity: 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .book-list {
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .group-header h2 {
+                font-size: 1.8rem;
+            }
+            
+            .book-list {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+                gap: 20px;
+            }
+            
+            .book-info {
+                padding: 15px;
+            }
+            
+            .book-title {
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .book-list {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 15px;
+            }
+            
+            .book-thumbnail-wrapper {
+                height: 200px;
+            }
+            
+            .book-info {
+                padding: 12px;
+            }
+            
+            .book-title {
+                font-size: 1rem;
+                -webkit-line-clamp: 2;
+            }
+            
+            .book-author {
+                font-size: 0.85rem;
+                margin-bottom: 15px;
+            }
+            
+            .btn-sm {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+
+    <div class="container mt-5">
+        <div class="group-header">
+            <h2>
+                {% if group_name == "Reading" %}
+                    <i class="fas fa-book-reader"></i>
+                {% elif group_name == "Read" %}
+                    <i class="fas fa-check-circle"></i>
+                {% elif group_name == "Wishlist" %}
+                    <i class="fas fa-star"></i>
+                {% else %}
+                    <i class="fas fa-layer-group"></i>
+                {% endif %}
+                {{ group_name }} Books
+                {% if books %}
+                    <span class="books-count">{{ books|length }}</span>
+                {% endif %}
+            </h2>
+        </div>
+
+        {% if books %}
+            <div class="book-list">
+                {% for book in books %}
+                    <div class="book-card" style="--i: {{ forloop.counter }}">
+                        <div class="book-thumbnail-wrapper">
+                            <img src="{{ book.thumbnail }}" alt="{{ book.title }}" class="book-thumbnail">
+                        </div>
+                        <div class="book-info">
+                            <span class="category-badge">{{ book.genre|default:"Fiction" }}</span>
+                            <h5 class="book-title">{{ book.title }}</h5>
+                            <p class="book-author">by {{ book.authors }}</p>
+                            
+                            {% if group_name == "Reading" and book.progress %}
+                            <div class="reading-progress-container">
+                                <div class="reading-progress-bar">
+                                    <div class="reading-progress-value" style="width: {{ book.progress }}%"></div>
+                                </div>
+                                <div class="reading-progress-text">
+                                    <span>{{ book.progress }}% complete</span>
+                                    <span>{{ book.current_page|default:"?" }}/{{ book.total_pages|default:"?" }}</span>
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            <div class="actions-container">
+                                <a href="{% url 'google_book_detail' book.id %}" class="btn btn-sm btn-outline-primary w-100">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-state-icon">
+                    <i class="fas fa-book-open"></i>
+                </div>
+                <p class="empty-state-text">No books found in your {{ group_name|lower }} list.</p>
+                <a href="{% url 'search_books' %}" class="btn btn-primary">Find Books to Add</a>
+            </div>
+        {% endif %}
+        
+        <div class="back-container">
+            <a href="{% url 'home' %}" class="btn btn-secondary navigation-btn">
+                <i class="fas fa-arrow-left"></i> Back to Bookshelf
+            </a>
+        </div>
+    </div>
+{% endblock %}

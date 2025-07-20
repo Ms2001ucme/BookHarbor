@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Search Results for "{{ query }}"</h2>
+
+
+{% if google_books %}
+    <h3>Google Books Results</h3>
+    <ul>
+        {% for book in google_books %}
+            <div class="card shadow-lg p-3 mb-4">
+                <div class="row">
+                    <div class="col-md-3">
+                        <img src="{{ book.thumbnail }}" class="img-fluid rounded" alt="{{ book.title }}">
+                    </div>
+                    <div class="col-md-9">
+                        <h4><a href="{% url 'google_book_detail' book.id %}" class="text-decoration-none">{{ book.title }}</a></h4>
+                        <p class="text-muted">by {{ book.author }}</p>
+                        <p>{{ book.description|truncatewords:30 }}</p>
+                        {% comment %} <a href="{{ book.google_books_url }}" target="_blank" class="btn btn-outline-secondary">View on Google Books</a> {% endcomment %}
+                        <a href="{% url 'google_book_detail' book.id %}" class="btn btn-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+    </ul>
+{% else %}
+    <p>No books found from Google Books.</p>
+{% endif %}
+
+
+
+{% endblock %}

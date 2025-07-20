@@ -1,0 +1,586 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Book Harbor - Find Your Next Adventure{% endblock %}
+
+{% block content %}
+
+<style>
+    body {
+        background: linear-gradient(135deg, #f0f7ff, #e6f2ff, #d4e6ff, #f0f7ff);
+        font-family: 'Poppins', sans-serif;
+        color: #2c3e50;
+        line-height: 1.6;
+    }
+
+    /* Hero Section */
+    .hero {
+        background: url('{% static "images/hero.jpg" %}') no-repeat center center/cover;
+        text-align: center;
+        color: white;
+        padding: 180px 20px;
+        border-radius: 0 0 80px 80px;
+        box-shadow: 0px 15px 40px rgba(0, 0, 0, 0.25);
+        position: relative;
+        margin-bottom: 80px;
+        overflow: hidden;
+    }
+
+    .hero::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(32, 74, 135, 0.75));
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 1;
+        max-width: 900px;
+        margin: 0 auto;
+        animation: fadeIn 1.2s ease-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero h1 {
+        font-size: 4.2rem;
+        font-weight: 800;
+        margin-bottom: 25px;
+        text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+        letter-spacing: -1px;
+        line-height: 1.2;
+    }
+
+    .hero p {
+        font-size: 1.8rem;
+        margin-bottom: 45px;
+        text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+        font-weight: 300;
+    }
+
+    .hero-btn {
+        background: #fff;
+        color: #204a87;
+        padding: 16px 38px;
+        border-radius: 50px;
+        font-size: 1.2rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.4s ease;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        display: inline-block;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-btn::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateX(-100%);
+        transition: transform 0.6s ease;
+    }
+
+    .hero-btn:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+        background: #f8f9fa;
+    }
+
+    .hero-btn:hover::after {
+        transform: translateX(100%);
+    }
+
+    /* Section Headers */
+    .section-header {
+        font-size: 2.6rem;
+        font-weight: 700;
+        color: #204a87;
+        margin: 60px 0 40px;
+        text-align: center;
+        position: relative;
+        padding-bottom: 20px;
+        letter-spacing: -0.5px;
+    }
+    
+    .section-header::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 5px;
+        background: linear-gradient(90deg, #204a87, #729fcf);
+        border-radius: 5px;
+    }
+
+    /* Book Grid Section */
+    .books-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .book-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 30px;
+        margin: 40px 0;
+    }
+
+    .book-card {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        transition: all 0.4s ease;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        position: relative;
+    }
+
+    .book-card:hover {
+        transform: translateY(-12px);
+        box-shadow: 0 20px 35px rgba(0, 0, 0, 0.15);
+    }
+
+    .book-cover-container {
+        position: relative;
+        overflow: hidden;
+        height: 320px;
+    }
+
+    .book-cover {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.7s ease;
+    }
+
+    .book-card:hover .book-cover {
+        transform: scale(1.07);
+    }
+
+    .book-info {
+        padding: 20px 25px 25px;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+    }
+
+    .book-title {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 8px;
+        line-height: 1.4;
+        transition: color 0.3s ease;
+    }
+
+    .book-card:hover .book-title {
+        color: #204a87;
+    }
+
+    .book-author {
+        color: #6c757d;
+        font-size: 1rem;
+        margin-bottom: 12px;
+        font-weight: 500;
+    }
+
+    .book-description {
+        color: #495057;
+        margin-bottom: 20px;
+        line-height: 1.7;
+        font-size: 0.95rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .book-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: auto;
+    }
+
+    .book-rating {
+        color: #f39c12;
+        font-weight: 600;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        gap: 3px;
+    }
+
+    .book-detail-btn {
+        padding: 10px 20px;
+        background: #204a87;
+        color: white;
+        border-radius: 30px;
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+        display: inline-block;
+        text-align: center;
+        box-shadow: 0 4px 10px rgba(32, 74, 135, 0.2);
+    }
+
+    .book-detail-btn:hover {
+        background: #3465a4;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 15px rgba(32, 74, 135, 0.3);
+    }
+
+    /* Pagination */
+    .pagination-container {
+        display: flex;
+        justify-content: center;
+        margin: 40px 0 60px;
+    }
+
+    .pagination {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+        background: white;
+        padding: 10px 15px;
+        border-radius: 50px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    .pagination a, .pagination span {
+        padding: 10px 15px;
+        color: #204a87;
+        text-decoration: none;
+        font-weight: 600;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+    }
+
+    .pagination span {
+        color: #6c757d;
+    }
+
+    .pagination a:hover {
+        background: #e6f2ff;
+        transform: translateY(-2px);
+    }
+
+    .pagination .current-page {
+        background: #204a87;
+        color: white;
+        padding: 10px 15px;
+        border-radius: 50px;
+    }
+
+    /* Quick Links Section */
+    .quick-links-section {
+        background: linear-gradient(135deg, #f0f7ff, #e6f2ff);
+        padding: 80px 0;
+        margin-top: 60px;
+    }
+
+    .quick-links {
+        background: white;
+        padding: 50px;
+        border-radius: 30px;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 40px;
+        max-width: 1200px;
+        margin: 0 auto;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .quick-links::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 8px;
+        background: linear-gradient(90deg, #204a87, #729fcf);
+    }
+    
+    .link-group {
+        flex: 1;
+        min-width: 220px;
+    }
+    
+    .link-group h3 {
+        color: #204a87;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #e9ecef;
+        font-size: 1.4rem;
+        font-weight: 700;
+    }
+    
+    .link-group ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .link-group li {
+        margin-bottom: 15px;
+    }
+    
+    .link-group a {
+        color: #495057;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-block;
+        font-size: 1.05rem;
+        padding: 5px 0;
+        position: relative;
+    }
+    
+    .link-group a::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 2px;
+        background: #204a87;
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform 0.4s ease;
+    }
+    
+    .link-group a:hover {
+        color: #204a87;
+        transform: translateX(5px);
+    }
+    
+    .link-group a:hover::after {
+        transform: scaleX(1);
+        transform-origin: left;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 992px) {
+        .hero h1 {
+            font-size: 3.4rem;
+        }
+        
+        .section-header {
+            font-size: 2.3rem;
+        }
+        
+        .book-grid {
+            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+        }
+        
+        .quick-links {
+            padding: 40px 30px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .hero {
+            padding: 140px 15px;
+            border-radius: 0 0 50px 50px;
+        }
+        
+        .hero h1 {
+            font-size: 2.8rem;
+        }
+        
+        .hero p {
+            font-size: 1.5rem;
+        }
+        
+        .section-header {
+            font-size: 2rem;
+        }
+        
+        .book-grid {
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 25px;
+        }
+        
+        .book-cover-container {
+            height: 280px;
+        }
+        
+        .quick-links {
+            padding: 35px 25px;
+            gap: 30px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .hero {
+            padding: 120px 15px;
+            border-radius: 0 0 40px 40px;
+        }
+        
+        .hero h1 {
+            font-size: 2.3rem;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+        }
+        
+        .section-header {
+            font-size: 1.8rem;
+        }
+        
+        .book-grid {
+            grid-template-columns: 1fr;
+            max-width: 320px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .pagination a, .pagination span {
+            padding: 8px 12px;
+            font-size: 0.9rem;
+        }
+        
+        .quick-links {
+            padding: 30px 20px;
+        }
+        
+        .link-group {
+            min-width: 100%;
+        }
+    }
+</style>
+
+<!-- Hero Section -->
+<div class="hero">
+    <div class="hero-content">
+        <h1>Your Journey Through Pages Begins Here</h1>
+        <p>Explore curated collections of books from beloved classics to the latest bestsellers</p>
+        {% if user.is_authenticated %}
+        <a href="#" class="hero-btn">Start Exploring</a>
+        {% else %}
+        <a href="{% url 'login' %}?next=#" class="hero-btn">Start Exploring</a>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Books Section -->
+<div class="books-container">
+    {% if page_obj %}
+        <h2 class="section-header">Discover Great Books</h2>
+        
+        <div class="book-grid">
+            {% for book in page_obj %}
+                <div class="book-card">
+                    <div class="book-cover-container">
+                        <img src="{{ book.thumbnail }}" alt="Cover of {{ book.title }}" class="book-cover">
+                    </div>
+                    <div class="book-info">
+                        <a href="{% url 'google_book_detail' book.id %}" style="text-decoration: none;">
+                            <h3 class="book-title">{{ book.title }}</h3>
+                        </a>
+                        <p class="book-author">By: {{ book.authors|join:", " }}</p>
+                        <p class="book-description">{{ book.description|truncatewords:30 }}</p>
+                        <div class="book-footer">
+                            <div class="book-rating">
+                                ★★★★☆
+                            </div>
+                            <a href="{% url 'google_book_detail' book.id %}" class="book-detail-btn">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Pagination -->
+        <div class="pagination-container">
+            <div class="pagination">
+                {% if page_obj.has_previous %}
+                    <a href="?q={{ query }}{% if readable_only %}&readable_only=on{% endif %}&page=1">&laquo; First</a>
+                    <a href="?q={{ query }}{% if readable_only %}&readable_only=on{% endif %}&page={{ page_obj.previous_page_number }}">‹ Previous</a>
+                {% endif %}
+                
+                <span class="current-page">{{ page_obj.number }}</span>
+                <span>of {{ page_obj.paginator.num_pages }}</span>
+                
+                {% if page_obj.has_next %}
+                    <a href="?q={{ query }}{% if readable_only %}&readable_only=on{% endif %}&page={{ page_obj.next_page_number }}">Next ›</a>
+                    <a href="?q={{ query }}{% if readable_only %}&readable_only=on{% endif %}&page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Quick Links Section -->
+{% comment %} <div class="quick-links-section">
+    <div class="quick-links">
+        <div class="link-group">
+            <h3>Discover</h3>
+            <ul>
+                {% if user.is_authenticated %}
+                <li><a href="#">All Books</a></li>
+                <li><a href="#">Bestsellers</a></li>
+                <li><a href="#">New Releases</a></li>
+                <li><a href="#">Reading Lists</a></li>
+                {% else %}
+                <li><a href="{% url 'login' %}?next=#">All Books</a></li>
+                <li><a href="{% url 'login' %}?next=#">Bestsellers</a></li>
+                <li><a href="{% url 'login' %}?next=#">New Releases</a></li>
+                <li><a href="{% url 'login' %}?next=#">Reading Lists</a></li>
+                {% endif %}
+            </ul>
+        </div>
+        <div class="link-group">
+            <h3>Community</h3>
+            <ul>
+                {% if user.is_authenticated %}
+                <li><a href="#">Book Clubs</a></li>
+                <li><a href="#">Discussions</a></li>
+                <li><a href="#">Events</a></li>
+                <li><a href="#">Reading Challenges</a></li>
+                {% else %}
+                <li><a href="{% url 'login' %}?next=#">Book Clubs</a></li>
+                <li><a href="{% url 'login' %}?next=#">Discussions</a></li>
+                <li><a href="{% url 'login' %}?next=#">Events</a></li>
+                <li><a href="{% url 'login' %}?next=#">Reading Challenges</a></li>
+                {% endif %}
+            </ul>
+        </div>
+        <div class="link-group">
+            <h3>About</h3>
+            <ul>
+                <li><a href="{% url 'about' %}">About Us</a></li>
+                <li><a href="#">Contact</a></li>
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">Terms of Service</a></li>
+            </ul>
+        </div>
+    </div>
+</div> {% endcomment %}
+
+{% endblock content %}

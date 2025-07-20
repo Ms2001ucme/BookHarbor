@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-7">
+      <div class="card border-0 shadow-lg rounded-3 overflow-hidden">
+        <!-- Header with a reliable background color instead of gradient -->
+        <div class="card-header bg-primary text-white text-center py-4">
+          <h2 class="mb-2">Join Book Harbor</h2>
+          <p class="mb-0">Start your reading journey today</p>
+        </div>
+        
+        <div class="card-body p-4 p-md-5">
+          <!-- Display Messages -->
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-{{ message.tags }} alert-dismissible fade show mb-4" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+          {% endif %}
+
+          <!-- Registration Form -->
+          <form method="POST" class="needs-validation" novalidate>
+            {% csrf_token %}
+
+            <div class="row">
+              <!-- Full Name -->
+              <div class="col-12 mb-4">
+                <label for="joinName" class="form-label fw-bold">Full Name</label>
+                <input type="text" class="form-control form-control-lg" name="username" id="joinName" 
+                       placeholder="Enter your full name" required>
+                <div class="text-danger mt-1">{{ form.username.errors }}</div>
+              </div>
+
+              <!-- Email -->
+              <div class="col-12 mb-4">
+                <label for="joinEmail" class="form-label fw-bold">Email</label>
+                <input type="email" class="form-control form-control-lg" name="email" id="joinEmail" 
+                       placeholder="Enter your email" required>
+                <div class="text-danger mt-1">{{ form.email.errors }}</div>
+              </div>
+
+              <!-- Role Selection -->
+              <div class="col-12 mb-4">
+                <label for="role" class="form-label fw-bold">Register As</label>
+                <select name="role" id="role" class="form-select form-select-lg" required>
+                  <option value="" disabled selected>Select your role</option>
+                  <option value="user">Reader</option>
+                  <option value="author">Author</option>
+                </select>
+                <div class="text-danger mt-1">{{ form.role.errors }}</div>
+              </div>
+
+              <!-- Password -->
+              <div class="col-12 mb-4">
+                <label for="joinPassword" class="form-label fw-bold">Password</label>
+                <div class="input-group input-group-lg">
+                  <input type="password" class="form-control" name="password1" id="joinPassword" 
+                         placeholder="Create a password" required>
+                  <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                    Show
+                  </button>
+                </div>
+                <div class="form-text mt-1">Password must be at least 8 characters long</div>
+                <div class="text-danger mt-1">{{ form.password1.errors }}</div>
+              </div>
+
+              <!-- Confirm Password -->
+              <div class="col-12 mb-4">
+                <label for="joinConfirmPassword" class="form-label fw-bold">Confirm Password</label>
+                <div class="input-group input-group-lg">
+                  <input type="password" class="form-control" name="password2" id="joinConfirmPassword" 
+                         placeholder="Confirm your password" required>
+                  <button class="btn btn-outline-secondary" type="button" id="toggleConfirmPassword">
+                    Show
+                  </button>
+                </div>
+                <div class="text-danger mt-1">{{ form.password2.errors }}</div>
+              </div>
+
+              <!-- Terms and Conditions -->
+              <div class="col-12 mb-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="termsCheck" required>
+                  <label class="form-check-label" for="termsCheck">
+                    I agree to the <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">Terms and Conditions</a>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Register Button -->
+              <div class="col-12 mb-4">
+                <button type="submit" class="btn btn-primary btn-lg w-100 py-3">Join Now</button>
+              </div>
+            </div>
+          </form>
+        </div>
+        
+        <div class="card-footer text-center py-4 bg-light">
+          <div class="fs-6">
+            Already have an account? <a href="{% url 'login' %}" class="text-decoration-none fw-bold">Sign in here</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Terms and Conditions Modal -->
+<div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="termsModalLabel">Terms and Conditions</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>By creating an account on Book Harbor, you agree to our Terms of Service and Privacy Policy.</p>
+        <p>We respect your privacy and are committed to protecting your personal data.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">I Agree</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add JavaScript for password toggles -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Toggle password visibility
+    document.getElementById('togglePassword').addEventListener('click', function() {
+      const passwordInput = document.getElementById('joinPassword');
+      
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        this.textContent = 'Hide';
+      } else {
+        passwordInput.type = 'password';
+        this.textContent = 'Show';
+      }
+    });
+    
+    // Toggle confirm password visibility
+    document.getElementById('toggleConfirmPassword').addEventListener('click', function() {
+      const confirmPasswordInput = document.getElementById('joinConfirmPassword');
+      
+      if (confirmPasswordInput.type === 'password') {
+        confirmPasswordInput.type = 'text';
+        this.textContent = 'Hide';
+      } else {
+        confirmPasswordInput.type = 'password';
+        this.textContent = 'Show';
+      }
+    });
+  });
+</script>
+{% endblock content %}
