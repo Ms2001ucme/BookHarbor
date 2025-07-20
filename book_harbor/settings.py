@@ -154,5 +154,5 @@ AUTH_USER_MODEL = 'users.CustomUser'
 
 
 #GOOGLE_BOOKS_API_KEY = os.getenv("GOOGLE_BOOKS_API_KEY")  # Used environment variable for security
-GOOGLE_BOOKS_API_KEY = "AIzaSyBcDN4H1kO__SX0eGLQSmdomDhbEkp9wDE" # Used environment variable for security
+
 
